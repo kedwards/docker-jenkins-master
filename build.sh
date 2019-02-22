@@ -1,18 +1,54 @@
 #!/usr/bin/env bash
 
-set -o errexit
-set -o nounset
-set -o pipefail
+set -Eeo pipefail
 
-# enable interruption signal handling
-trap - INT TERM
-
+OPTS=':n:v:'
+SCRIPT_NAME=$(basename $(readlink -nf $0) ".sh")
 SCRIPT_DIR=$(dirname $(readlink -f "$0"))
-IMAGE_VERSION=0.1.0
-NAME=$1
-DOCKERFILE=$2
 
-docker build --no-cache -t kevinedwards/${NAME}:${IMAGE_VERSION} ${SCRIPT_DIR}
+show_help()
+{
+    cat << EOF
+Usage: ${SCRIPT_NAME}.sh -n <image_name> -v <image_version> [-h]
+Run the installer, with following options:
+  -n  image name
+  -v  image version
+  -h  display help
 
-docker image tag "kevinedwards/${NAME}:${IMAGE_VERSION}" "kevinedwards/${NAME}:latest"
+EOF
+}
 
+OPTIND=1
+while getopts ${OPTS} OPT
+do
+  case "${OPT}" in
+    h)  show_help
+        exit 1;;
+    n)  NAME=$OPTARG;;
+    v)  VERSION=$OPTARG;;
+    \?)	# unknown flag
+    	show_help
+        exit 1;;
+  esac
+done
+
+shift $(($OPTIND - 1))
+
+trap show_help INT EXIT
+
+docker build --no-cache -t "kevinedwards/${NAME}:${VERSION}" ${SCRIPT_DIR} && \
+docker image tag "kevinedwards/${NAME}:${VERSION}" "kevinedwards/${NAME}:latest"
+
+cat > ${SCRIPT_DIR}/jenkins-master.sh <<EOF
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+docker container run --rm -idt \
+--name ${NAME} \
+--env JAVA_OPTS=-Dhudson.footerURL=http://kevinedwards.ca \
+--p 8080:8080
+-v /vagrant/jenkins_home:/var/jenkins_home \
+-v /var/run/docker.sock:/var/run/docker.sock \
+kevinedwards/${NAME}:latest \
+"\$@"
+EOF
