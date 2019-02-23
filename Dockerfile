@@ -15,5 +15,17 @@ RUN /usr/local/bin/install-plugins.sh docker-plugin \
   timestamper \
   amazon-ecs \
   ec2 \
-  scalable-amazon-ecs
-
+  scalable-amazon-ecs \
+  checkstyle \
+  cloverphp \
+  crap4j \
+  dry \
+  htmlpublisher \
+  jdepend \
+  plot \
+  pmd \
+  violations \
+  warnings \
+  xunit \
+  git \
+  build-monitor-plugin 
