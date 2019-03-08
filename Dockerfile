@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.166-alpine
+FROM jenkins/jenkins:2.167-alpine
 
 LABEL maintainer="Kevin Edwards <kedwards@kevinedwards.ca>"
 
@@ -28,4 +28,6 @@ violations \
 warnings \
 xunit \
 git \
-build-monitor-plugin 
+build-monitor-plugin \
+github-issues \
+jenkins-cloudformation-plugin
