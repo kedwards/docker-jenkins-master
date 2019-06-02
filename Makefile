@@ -1,3 +1,5 @@
+.ONESHELL:
+
 VERSION?=beta
 SCRIPT?=jenkins-master.sh
 REPO_NAME?=kevinedwards
@@ -15,9 +17,10 @@ build:
 	docker build --no-cache -t 'kevinedwards/jenkins-master:$(VERSION)' .
 
 run:
-	docker container run --rm -idt \
+	@docker container run --rm -idt \
 	--name ${IMAGE_NAME} \
 	--env JAVA_OPTS=-Dhudson.footerURL=$(FOOTER_URL) \
 	-p 8080:8080 \
+	-v $$(pwd)/jenkins_home:/var/jenkins_home \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	$(REPO_NAME)/${IMAGE_NAME}:latest
