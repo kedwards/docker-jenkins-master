@@ -1,0 +1,39 @@
+---
+- type: "vb"
+  enabled: true
+  sync_disabled: false
+  box: "debian/contrib-stretch64"
+  name: "jenkins-host"
+  guest_update: false
+  update_box: false
+  ip_addr: "192.168.100.150"
+  ram: "1024"
+  vcpu: "1"
+
+- type: "vb"
+  enabled: false
+  sync_disabled: false
+  box: "centos/7"
+  name: "centoshostvm"
+  guest_update: false
+  update_box: false
+  ip_addr: "192.168.58.57"
+  ram: "512"
+  vcpu: "1"
+
+- type: "aws"
+  enabled: false
+  sync_disabled: true
+  box: "aws-dummy"
+  keypair_name: "kedwards_keca"
+  instance_type: "t2.micro"
+  region: "ca-central-1"
+  subnet_id: "subnet-050e2d2e8c3ce2d92"
+  associate_public_ip: true
+  ami: "ami-01872e06509e14f77" # ca-central
+  private_key_path: "~/.ssh/kedwards_keca.pem"
+  tags:
+    name: "awshostvmaws"
+    team: "devops"
+  security_group: "sg-036a315514f2508f9"
+  name: "dockerhostvmaws"
