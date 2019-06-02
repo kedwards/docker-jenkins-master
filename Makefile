@@ -1,26 +1,30 @@
 .ONESHELL:
 
 VERSION?=beta
-SCRIPT?=jenkins-master.sh
-REPO_NAME?=kevinedwards
-IMAGE_NAME?=jenkins-master
-FOOTER_URL?=http://kevinedwards.ca
+REPO?=kevinedwards
+IMAGE?=jenkins-master
+SCRIPT?=$(IMAGE).sh
+FOOTER_URL?=http://$(REPO).ca
 
 clean:
+	@docker image rm '$(REPO)/$(IMAGE):$(VERSION)'
+
+clean-force:
+	@docker image rm '$(REPO)/$(IMAGE):$(VERSION)' --force
 
 test:
 
 tag:
-	docker image tag 'kevinedwards/jenkins-master:$(VERSION)' 'kevinedwards/jenkins-master:latest'
+	docker image tag '$(REPO)/$(IMAGE):$(VERSION)' '$(REPO)/$(IMAGE):latest'
 
 build:
-	docker build --no-cache -t 'kevinedwards/jenkins-master:$(VERSION)' .
+	docker build --no-cache -t '$(REPO)/$(IMAGE):$(VERSION)' .
 
 run:
 	@docker container run --rm -idt \
-	--name ${IMAGE_NAME} \
+	--name ${IMAGE} \
 	--env JAVA_OPTS=-Dhudson.footerURL=$(FOOTER_URL) \
 	-p 8080:8080 \
 	-v $$(pwd)/jenkins_home:/var/jenkins_home \
 	-v /var/run/docker.sock:/var/run/docker.sock \
-	$(REPO_NAME)/${IMAGE_NAME}:latest
+	$(REPO)/${IMAGE}:$(VERSION)
