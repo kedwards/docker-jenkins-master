@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.179-alpine
+FROM jenkins/jenkins:alpine
 
 LABEL maintainer="Kevin Edwards <kedwards@kevinedwards.ca>"
 

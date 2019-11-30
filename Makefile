@@ -20,6 +20,15 @@ tag:
 build:
 	docker build --no-cache -t '$(REPO)/$(IMAGE):$(VERSION)' .
 
+machine:
+	docker-machine -D create \
+	-d generic \
+	--generic-ip-address 192.168.100.150 \
+	--generic-ssh-port 22 \
+	--generic-ssh-key "C:/Users/kedwa/dev/jenkins/.vagrant/machines/jenkins-master/virtualbox/private_key" \
+	--generic-ssh-user vagrant \
+	jenkins
+
 run:
 	@docker container run --rm -idt \
 	--name ${IMAGE} \
