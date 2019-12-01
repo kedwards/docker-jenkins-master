@@ -30,4 +30,5 @@ xunit \
 git \
 build-monitor-plugin \
 github-issues \
-jenkins-cloudformation-plugin
+jenkins-cloudformation-plugin \
+nodejs
